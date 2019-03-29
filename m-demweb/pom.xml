@@ -16,6 +16,7 @@
 	<properties>
 		<curproject.jarFinalName>m-demweb</curproject.jarFinalName>
 		<curproject.warFinalName>m-demweb</curproject.warFinalName>
+		<curproject.warDepProName>m-demo</curproject.warDepProName>
 	</properties>
 
 	<dependencies>
@@ -90,16 +91,17 @@
 						</goals>
 						<configuration>
 							<encoding>UTF-8</encoding>
-							<outputDirectory>${basedir}/AAAAAAAAAAAAAAAAAAAAAAAAAA</outputDirectory>
+							<outputDirectory>${basedir}/target/${curproject.jarFinalName}</outputDirectory> -->
 							<resources>
 								<resource>
-									<directory>${project.parent.basedir}/m-demo/src/main/webapp</directory>
+									<directory>${project.parent.basedir}/${curproject.warDepProName}/src/main/webapp</directory>
 									<includes>
 										<include>**/*.*</include>
 									</includes>
-									<excludes>
+									<!-- <excludes>
 										<exclude>**/*.bat</exclude>
-									</excludes>
+										<exclude>**/WEB-INF/*.*</exclude>
+									</excludes> -->
 									<filtering>true</filtering>
 								</resource>
 								<!-- <resource>
