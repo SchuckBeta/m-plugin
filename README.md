@@ -56,6 +56,16 @@ user.dir 用户的当前工作目录
  </properties>
 ~~~
 
+## maven-clean-plugin：
+#### clean插件
+~~~
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.6.1</version>
+			</plugin>
+~~~
+
 ## maven-compiler-plugin：
 #### 编译Java源码，一般只需设置编译的jdk版本
 ~~~
@@ -66,6 +76,7 @@ user.dir 用户的当前工作目录
     <configuration>
         <source>1.8</source>
         <target>1.8</target>
+        <showWarnings>true</showWarnings>
     </configuration>
 </plugin>
 ~~~
@@ -97,7 +108,7 @@ user.dir 用户的当前工作目录
 ~~~
 
 ## maven-war-plugin：
-####  生成War：
+####   war 打包插件, 设定war包名称不带版本号：
 ~~~
 <plugin>
 	<groupId>org.apache.maven.plugins</groupId>
@@ -105,8 +116,8 @@ user.dir 用户的当前工作目录
 	<version>2.4</version>
 	<configuration>
 	    <packagingExcludes>
-		WEB-INF/classes/org/apache/ibatis/**,
-		WEB-INF/classes/org/mybatis/spring/**
+            WEB-INF/classes/org/apache/ibatis/**,
+            WEB-INF/classes/org/mybatis/spring/**
 	    </packagingExcludes>
 	    <warSourceExcludes>
 		static/bootstrap/2.3.1/docs/**,
@@ -146,30 +157,6 @@ user.dir 用户的当前工作目录
 </plugin>
 ~~~
 
-
-## maven-dependency-plugin:
-#### 用于复制依赖的jar包到指定的文件夹里
-~~~
-<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-dependency-plugin</artifactId>
-    <version>2.10</version>
-    <executions>
-        <execution>
-            <id>copy-dependencies</id>
-            <phase>package</phase>
-            <goals>
-                <goal>copy-dependencies</goal>
-            </goals>
-            <configuration>
-                <outputDirectory>${project.build.directory}/lib</outputDirectory>
-            </configuration>
-        </execution>
-    </executions>
-</plugin>
-~~~
-
-
 ## maven-jar-plugin：
 #### 打成jar时，设定manifest的参数，比如指定运行的Main class，还有依赖的jar包，加入classpath中
 ~~~
@@ -178,6 +165,22 @@ user.dir 用户的当前工作目录
 	<artifactId>maven-jar-plugin</artifactId>
 	<version>2.4</version>
 	<configuration>
+		<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<classesDirectory>${project.outputDirectory}</classesDirectory>
+							<finalName>${artifactId.finalName}</finalName>
+							<outputDirectory>${project.build.directory}/${project.artifactId}/WEB-INF/lib</outputDirectory>
+							<includes>
+					        	<include>com/XXX/XXX/**</include>
+					       	</includes>
+						</configuration>
+					</execution>
+		</executions>
 		<excludes>
 			<exclude>*.properties</exclude>
 		</excludes>
@@ -281,10 +284,65 @@ user.dir 用户的当前工作目录
     <version>2.2</version>
     <configuration>
         <url>http://59.110.162.178:8080/manager/text</url>
-        <username>linjinbin</username>
-        <password>linjinbin</password>
+        <username>tomcat-admin</username>
+        <password>tomcat-admin</password>
     </configuration>
 </plugin>
+~~~
+
+
+## tomcat-maven-plugin:
+#### 用于远程部署Java Web项目
+#### 增加的plugin节点用于pom.xml的server与maven的setting.xml中的id关联
+~~~
+<plugin>
+	<groupId>org.codehaus.mojo</groupId>
+    <artifactId>tomcat-maven-plugin</artifactId>
+    <configuration>
+    	<server>tomcat</server>
+        <url>http://localhost:8080/manager/text</url>
+        <path>/framework</path>
+    </configuration>
+</plugin>
+~~~
+
+##  maven-pmd-plugin
+#### pmd插件
+~~~
+            <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-pmd-plugin</artifactId>
+                 <version>3.8</version>
+                 <configuration>
+                     <rulesets>
+                         <ruleset>rulesets/java/ali-comment.xml</ruleset>
+                         <ruleset>rulesets/java/ali-concurrent.xml</ruleset>
+                         <ruleset>rulesets/java/ali-constant.xml</ruleset>
+                         <ruleset>rulesets/java/ali-exception.xml</ruleset>
+                         <ruleset>rulesets/java/ali-flowcontrol.xml</ruleset>
+                         <ruleset>rulesets/java/ali-naming.xml</ruleset>
+                         <ruleset>rulesets/java/ali-oop.xml</ruleset>
+                         <ruleset>rulesets/java/ali-orm.xml</ruleset>
+                         <ruleset>rulesets/java/ali-other.xml</ruleset>
+                         <ruleset>rulesets/java/ali-set.xml</ruleset>
+                     </rulesets>
+                     <printFailingErrors>true</printFailingErrors>
+                 </configuration>
+                 <executions>
+                     <execution>
+                         <goals>
+                             <goal>check</goal>
+                         </goals>
+                     </execution>
+                 </executions>
+                 <dependencies>
+                     <dependency>
+                         <groupId>com.alibaba.p3c</groupId>
+                         <artifactId>p3c-pmd</artifactId>
+                         <version>1.3.0</version>
+                     </dependency>
+                 </dependencies>
+             </plugin>
 ~~~
 
 ## cobertura-maven-plugin:
@@ -428,6 +486,7 @@ user.dir 用户的当前工作目录
 </plugin>
 ~~~
 
+
 ## maven-assembly-plugin： 
 #### maven自定义(修改)编译后输出的war或jar文件名
 #### 支持定制化打包方式，负责将整个项目按照自定义的目录结构打成最终的压缩包，方便实际部署、可在此处设置打包拷贝路径，配置，以及打包好的jar文件等
@@ -538,8 +597,7 @@ fi
 ~~~
 
 ## maven-dependency-plugin:
-#### 用来拷贝项目所有依赖的插件
-
+#### 用来拷贝项目所有依赖的插件,复制依赖的jar包到指定的文件夹里
 ~~~
 <plugin> 
 	<groupId>org.apache.maven.plugins</groupId> 
@@ -578,3 +636,219 @@ if [ ! -z "$PIDS" ]; then
     exit 0;
 fi
 ~~~
+
+
+## jspc-maven-plugin:
+####  JSP 预编译插件  jspweb.xml
+~~~
+			<plugin>
+				<groupId>org.jasig.mojo.jspc</groupId>
+				<artifactId>jspc-maven-plugin</artifactId>
+				<version>2.0.0</version>
+				<configuration>
+					<injectString>&lt;!- - [INSERT FRAGMENT HERE] - -&gt;</injectString>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.jasig.mojo.jspc</groupId>
+						<artifactId>jspc-compiler-tomcat6</artifactId>
+						<version>2.0.0</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+~~~
+
+## jetty-jspc-maven-plugin:
+####  Jetty JSP 预编译插件  web.xml
+~~~
+<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>jetty-jspc-maven-plugin</artifactId>
+				<version>${jetty.version}</version>
+				<configuration>
+					<insertionMarker>&lt;!- - [INSERT FRAGMENT HERE] - -&gt;</insertionMarker>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>jspc</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+~~~
+
+## proguard-maven-plugin:
+####  混淆代码
+~~~
+			<plugin>
+				<groupId>com.github.wvengen</groupId>
+				<artifactId>proguard-maven-plugin</artifactId>
+				<version>2.0.11</version>
+				<!-- <executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>proguard</goal>
+						</goals>
+					</execution>
+				</executions> -->
+				<configuration>
+					<obfuscate>true</obfuscate>
+                    <options>
+			    		<!-- <option>-dontobfuscate</option> -->
+                        <!--忽略所有告警-->
+                        <option>-ignorewarnings</option>
+                        <!--不做 shrink -->
+                        <option>-dontshrink</option>
+                        <!--不做 optimize -->
+                        <option>-dontoptimize</option>
+                        <!--保持包注解类-->
+                        <option>-keep class **.package-info</option>
+
+						<!-- 开始配置 -->
+                        <!-- 以下为 Keep，哪些内容保持不变，因为有一些内容混淆后（a,b,c）导致反射或按类名字符串相关的操作失效 -->
+                        <!--JAXB NEED，具体原因不明，不加会导致 JAXB 出异常，如果不使用 JAXB 根据需要修改-->
+                        <option>-keepattributes Signature</option>
+
+                        <!--保持源码名与行号（异常时有明确的栈信息），注解（默认会过滤掉所有注解，会影响框架的注解）-->
+                        <option>-keepattributes SourceFile,LineNumberTable,*Annotation*</option>
+						<!-- 结束配置 -->
+
+						<!-- <option>-injars ${project.build.directory}/${artifactId.finalName}.war</option> -->
+						<option>-injars ${project.build.directory}/${project.artifactId}/WEB-INF/lib/${artifactId.finalName}.jar</option>
+                    </options>
+                    <outjar>${project.artifactId}/WEB-INF/lib/${artifactId.finalName}-out.jar</outjar>
+
+			       <!-- <options>
+						<option>-injars ${project.build.directory}/${project.artifactId}/WEB-INF/lib/${artifactId.finalName}.jar</option>
+                    </options>
+                    <outjar>${project.artifactId}/WEB-INF/lib/${artifactId.finalName}-out.jar</outjar> -->
+
+
+			        <!-- <options>
+						<option>-injars ${project.build.directory}/${artifactId.finalName}.war</option>
+                    </options>
+                    <outjar>${project.artifactId}/${artifactId.finalName}-out.war</outjar> -->
+
+
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+			        <proguardInclude>${basedir}/pom-proguard.cfg</proguardInclude>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<libs>
+						<lib>${java.home}/lib/rt.jar</lib>
+						<lib>${java.home}/lib/jsse.jar</lib>
+			            <lib>${java.home}/lib/jce.jar</lib>
+					</libs>
+			        <addMavenDescriptor>false</addMavenDescriptor>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>net.sf.proguard</groupId>
+						<artifactId>proguard-base</artifactId>
+						<version>5.3.3</version>
+						<scope>runtime</scope>
+					</dependency>
+				</dependencies>
+			</plugin>
+~~~
+
+## maven-eclipse-plugin:
+#### Eclipse 插件
+~~~
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<downloadSources>${downloadSources}</downloadSources>
+					<downloadJavadocs>false</downloadJavadocs>
+					<wtpversion>2.0</wtpversion>
+					<jeeversion>5.0</jeeversion>
+					<!-- <jeeversion>6.0</jeeversion> -->
+					<additionalConfig>
+						<file>
+							<name>.settings/org.eclipse.core.resources.prefs</name>
+							<content>
+								<![CDATA[eclipse.preferences.version=1${line.separator}encoding/<project>=${project.build.sourceEncoding}${line.separator}]]>
+							</content>
+						</file>
+					</additionalConfig>
+					<additionalProjectnatures>
+						<projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
+					</additionalProjectnatures>
+				</configuration>
+			</plugin>
+
+			<!-- tomcat6插件 -->
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat6-maven-plugin</artifactId>
+				<version>${tomcat.version}</version>
+				<configuration>
+					<port>${webserver.port}</port>
+					<path>/${project.artifactId}</path>
+					<uriEncoding>${project.build.sourceEncoding}</uriEncoding>
+				</configuration>
+			</plugin>
+~~~
+
+## tomcat7-maven-plugin:
+#### tomcat7插件
+~~~
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>${tomcat.version}</version>
+				<configuration>
+					<port>${webserver.port}</port>
+					<path>/${project.artifactId}</path>
+					<uriEncoding>${project.build.sourceEncoding}</uriEncoding>
+				</configuration>
+			</plugin>
+~~~
+
+## jetty-maven-plugin:
+#### jetty插件
+~~~
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>${jetty.version}</version>
+				<configuration>
+					<connectors>
+						<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+							<port>${webserver.port}</port>
+						</connector>
+					</connectors>
+					<webAppConfig>
+						<contextPath>/${project.artifactId}</contextPath>
+					</webAppConfig>
+					<systemProperties>
+						<systemProperty>
+							<name>org.mortbay.util.URI.charset</name>
+							<value>${project.build.sourceEncoding}</value>
+						</systemProperty>
+					</systemProperties>
+				</configuration>
+			</plugin>
+~~~
+
+
+
+
+			<!-- sonar插件 -->
+			<plugin>
+		        <groupId>org.codehaus.mojo</groupId>
+		        <artifactId>sonar-maven-plugin</artifactId>
+		        <version>2.7.1</version>
+		    </plugin>
