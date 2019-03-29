@@ -47,6 +47,137 @@ user.home 用户的主目录
 user.dir 用户的当前工作目录 
 ~~~
 
+## settings.xml：
+~~~
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+	<pluginGroups>
+	</pluginGroups>
+
+	<proxies>
+	</proxies>
+  	<localRepository>C:/Users/Administrator/.m2/repository</localRepository> 
+	<servers>
+		<server>
+			<id>tomcat_deploy</id>
+			<username>tomcat</username>
+			<password>tomcat</password>
+		</server>
+		<server>
+			<id>nexus-releases</id>
+			<username>admin</username>
+			<password>admin123</password>
+		</server>
+		<server>
+			<id>nexus-snapshots</id>
+			<username>admin</username>
+			<password>admin123</password>
+		</server>
+		<server>
+			<id>tomcat-dev</id>
+			<username>admin</username>
+			<password>admin</password>
+		</server>
+		 <server>  
+			<id>releases</id>  
+			<username>admin</username>  
+			<password>admin123</password>  
+		  </server>  
+		 <server>  
+			  <id>snapshots</id>  
+			  <username>admin</username>  
+			  <password>admin123</password>  
+		  </server>   
+	</servers>
+
+	<mirrors>
+	</mirrors>
+
+	<profiles>
+		<profile>	
+			<id>build-env</id>
+			<properties>
+				<maven.dbtask.skip>true</maven.dbtask.skip>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>local-repositories</id>
+			<repositories>
+				<repository>
+					<id>local-nexus</id>
+					<url>http://localhost/nexus/content/groups/public/</url>
+					<releases>
+                       <enabled>true</enabled>
+                       <updatePolicy>always</updatePolicy>
+                   </releases>
+                   <snapshots>
+                       <enabled>true</enabled>
+                       <updatePolicy>always</updatePolicy>
+                   </snapshots>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>local-nexus</id>
+					<url>http://localhost/nexus/content/groups/public/</url>
+					<releases>
+                       <enabled>true</enabled>
+                       <updatePolicy>always</updatePolicy>
+                   </releases>
+                   <snapshots>
+                       <enabled>true</enabled>
+                       <updatePolicy>always</updatePolicy>
+                   </snapshots>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
+		<profile>
+			<id>default-build-param</id>
+			<properties>
+				<project.build.sourceEncoding>utf8</project.build.sourceEncoding>
+				<maven.compiler.source>6</maven.compiler.source>
+				<maven.compiler.target>6</maven.compiler.target>
+				<maven.compiler.encoding>utf8</maven.compiler.encoding>
+				<scm.username>user</scm.username>
+				<scm.password>user</scm.password>
+
+				<!-- <sonar.exclusions>
+					**/src/main/java/org/**/*
+					**/src/main/java/Net/PC15/**/*
+					**/src/main/java/com/xxx/xxx/xxx/**/*
+					**/src/main/java/com/xxx/xxx/test/**/*
+					**/src/main/java/com/xxx/xxx/modules/act/**/*
+					**/src/main/java/com/xxx/xxx/modules/sys/**/*
+				</sonar.exclusions>-->
+			</properties>
+		</profile>
+		<profile>
+			<id>sonar</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<!--<sonar.jdbc.url>jdbc:mysql://localhost:3306/sonar?useUnicode=true&characterEncoding=utf8</sonar.jdbc.url>
+				<sonar.jdbc.driver>com.mysql.jdbc.Driver</sonar.jdbc.driver>
+				<sonar.jdbc.username>root</sonar.jdbc.username>
+				<sonar.jdbc.password>123456</sonar.jdbc.password>
+				<sonar.host.url>http://localhost:9000</sonar.host.url>-->
+				<sonar.host.url>http://localhost:9000</sonar.host.url>
+			</properties>
+		</profile>
+	</profiles>
+	<activeProfiles>
+		<activeProfile>build-env</activeProfile>
+		<activeProfile>local-repositories</activeProfile>
+		<activeProfile>default-build-param</activeProfile>
+	</activeProfiles>
+</settings>
+~~~
+
 ## properties：
 ~~~
 <properties>
@@ -283,7 +414,7 @@ user.dir 用户的当前工作目录
     <artifactId>tomcat7-maven-plugin</artifactId>
     <version>2.2</version>
     <configuration>
-        <url>http://59.110.162.178:8080/manager/text</url>
+        <url>http://127.0.0.1:8080/manager/text</url>
         <username>tomcat-admin</username>
         <password>tomcat-admin</password>
     </configuration>
