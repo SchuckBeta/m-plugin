@@ -1,11 +1,16 @@
 # Maven 常用插件的使用
+
+~~~
 ## properties：
+
 <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
  </properties>
+~~~
 
+~~~
 ## maven-compiler-plugin：
 #### 编译Java源码，一般只需设置编译的jdk版本
 <plugin>
@@ -17,7 +22,9 @@
         <target>1.8</target>
     </configuration>
 </plugin>
+~~~
 
+~~~
 ## maven-install-plugin 生成Jar到库：
 #### 生成Jar到库
 <plugin>
@@ -41,7 +48,9 @@
 		</execution>
 	</executions>
 </plugin>
+~~~
 
+~~~
 ## maven-war-plugin：
 ####  生成War：
 <plugin>
@@ -63,7 +72,9 @@
 	    <warName>${project.artifactId}</warName>
 	</configuration>
 </plugin>
+~~~
 
+~~~
 ## maven-deploy-plugin ：
 #### 发布Jar
 <plugin>
@@ -87,7 +98,9 @@
 		</execution>
 	</executions>
 </plugin>
+~~~
 
+~~~
 ## maven-dependency-plugin:
 #### 用于复制依赖的jar包到指定的文件夹里
 <plugin>
@@ -107,7 +120,9 @@
         </execution>
     </executions>
 </plugin>
+~~~
 
+~~~
 ## maven-jar-plugin：
 #### 打成jar时，设定manifest的参数，比如指定运行的Main class，还有依赖的jar包，加入classpath中
 <plugin>
@@ -158,7 +173,9 @@
 		</includes>
 	</configuration> 
 </plugin>
+~~~
 
+~~~
 ## maven-antrun-plugin:
 #### 在maven中运行Ant任务，比如在打包阶段，对文件进行复制
 <plugin>
@@ -184,7 +201,9 @@
         </execution>
     </executions>
 </plugin>
+~~~
 
+~~~
 ## wagon-maven-plugin:
 #### 用于一键部署，把本地打包的jar文件，上传到远程服务器上，并执行服务器上的shell命令
 <plugin>
@@ -203,7 +222,9 @@
         <displayCommandOutputs>true</displayCommandOutputs>
     </configuration>
 </plugin>
+~~~
 
+~~~
 ## tomcat7-maven-plugin:
 #### 用于远程部署Java Web项目
 <plugin>
@@ -216,7 +237,9 @@
         <password>linjinbin</password>
     </configuration>
 </plugin>
+~~~
 
+~~~
 ## cobertura-maven-plugin:
 #### 测试覆盖率插件
 <plugin>
@@ -230,7 +253,9 @@
 	</formats>
 	</configuration>
 </plugin>
+~~~
 
+~~~
 ## maven-shade-plugin:
 ####用于把多个jar包，打成1个jar包
 ####一般Java项目都会依赖其他第三方jar包，最终打包时，希望把其他jar包包含在一个jar包里
@@ -259,7 +284,9 @@
         </execution>
     </executions>
 </plugin>
+~~~
 
+~~~
 ## maven-resources-plugin：
 <plugin>
 	<artifactId>maven-resources-plugin</artifactId>
@@ -300,7 +327,9 @@
 		</execution>
 	</executions>
 </plugin>
+~~~
 
+~~~
 ## build-helper-maven-plugin：
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
@@ -326,8 +355,9 @@
 	</execution>
     </executions>
 </plugin> 
+~~~
 
-
+~~~
 ## maven-surefire-plugin：
 <plugin>
 	<artifactId>maven-surefire-plugin</artifactId>
@@ -347,8 +377,9 @@
 		</execution>
 	</executions>
 </plugin>
+~~~
 
-
+~~~
 ## maven-assembly-plugin： 
 #### maven自定义(修改)编译后输出的war或jar文件名
 #### 支持定制化打包方式，负责将整个项目按照自定义的目录结构打成最终的压缩包，方便实际部署、可在此处设置打包拷贝路径，配置，以及打包好的jar文件等
@@ -381,7 +412,9 @@
 	</execution>  
     </executions>  
 </plugin>  
+~~~
 
+~~~
 #### assembly.xml:
 <?xml version="1.0" encoding="UTF-8"?>
 <assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -401,7 +434,7 @@
             <directory>src/main/resources</directory>
             <outputDirectory>/</outputDirectory>
         </fileSet>
-
+    
         <fileSet>
             <directory>${project.build.directory}</directory>
             <outputDirectory>/</outputDirectory>
@@ -454,8 +487,9 @@ else
     echo " ${ARTIFACT_ID} Started Failed"
     exit 1;
 fi
+~~~
 
-
+~~~
 ## maven-dependency-plugin:
 ####用来拷贝项目所有依赖的插件
 <plugin> 
@@ -494,3 +528,4 @@ if [ ! -z "$PIDS" ]; then
     echo " PID: $PIDS"
     exit 0;
 fi
+~~~
