@@ -761,6 +761,156 @@ fi
 				</dependencies>
 			</plugin>
 ~~~
+#### pom-proguard.cfg
+~~~
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------
+# 1. 应该最大程度的熟悉项目的结构
+# 2. 对于保留和非保留的代码应该注意代码之间的关联关系，防止保留的部分调用到未混淆部分而出现异常
+# 3. 混淆后调试困难，有些问题不仅应该考虑混淆的问题，还应考虑proguard版本的问题（可能存在BUG）
+# 4. 应当保留bean对象和action中的属性名称，防止jsp页面和action数据无法交互
+# 5. 使用action的modeldriven 对象类型为List<T> 时，应当配置保留泛型
+# 6. 采用annotation配置应该注意spring注入的方式是采用byName还是byType，防止因为代码混淆后无法按照指定的类型注入bean
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# ----------------------------------
+#  通过指定数量的优化能执行
+#  -optimizationpasses n
+# ----------------------------------
+-optimizationpasses 3
+
+# ----------------------------------
+#   混淆时不会产生形形色色的类名
+#   -dontusemixedcaseclassnames
+# ----------------------------------
+-dontusemixedcaseclassnames
+
+# ----------------------------------
+#      指定不去忽略非公共的库类
+#  -dontskipnonpubliclibraryclasses
+# ----------------------------------
+#-dontskipnonpubliclibraryclasses
+
+# ----------------------------------
+#       不预校验
+#    -dontpreverify
+#	 -dontoptimize
+#java.lang.ArrayIndexOutOfBoundsException，解决办法：将proguard.cfg中的"-dontpreverify"改成“-dontoptimize”
+# ----------------------------------
+#-dontpreverify
+
+# ----------------------------------
+#      输出生成信息
+#       -verbose
+# ----------------------------------
+-verbose
+
+#混淆时应用侵入式重载
+-overloadaggressively
+
+#优化时允许访问并修改有修饰符的类和类的成员
+-allowaccessmodification
+
+#确定统一的混淆类的成员名称来增加混淆
+-useuniqueclassmembernames
+
+-dontwarn
+
+
+#-keepdirectories  **
+#-useuniqueclassmembernames
+
+#忽略警告
+-ignorewarnings
+
+#keepattributes
+-keepattributes **
+
+#保持泛型
+-keepattributes Signature
+
+#保持源码名与行号（异常时有明确的栈信息），忽略注解（默认会过滤掉所有注解，会影响框架的注解）
+-keepattributes SourceFile,LineNumberTable,*Annotation*
+-keepattributes *Annotation*
+#-keepattributes {attribute_name,...} 保护给定的可选属性，例如LineNumberTable, LocalVariableTable, SourceFile, Deprecated, Synthetic, Signature, and InnerClasses.
+
+#java.lang.ClassFormatError: LVTT entry for 'a' in class file ×× does not match any LVT entry 这个貌似是Proguard的bug,使用下面的代码解决
+-optimizations !code/allocation/variable
+
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------
+#这里添加你不需要混淆的类
+#org
+-keep enum org.** {*;}
+-keep class org.** {*;}
+-keep public enum org.** {*;}
+-keep public class org.** {*;}
+
+#javax.servlet.Servlet
+-keep class * extends javax.servlet.Servlet
+-keep public class * extends javax.servlet.Servlet
+
+
+#common
+-keep public class com.xxx.xxx.xxx.config.LeSval
+-keep enum com.xxx.xxx.xxx.license.common.service.bd.* {*;}
+-keep class com.xxx.xxx.xxx.license.common.service.bd.* {*;}
+-keep public enum com.xxx.xxx.xxx.license.common.service.bd.* {*;}
+-keep public class com.xxx.xxx.xxx.license.common.service.bd.* {*;}
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------
+-keep class * extends org.springframework.web.filter.GenericFilterBean {*;}
+-keep public class * extends org.springframework.web.filter.GenericFilterBean {*;}
+
+#接口
+-keep interface com.xxx.xxx.xxx.license.common.service.** {*;}
+-keep public interface com.xxx.xxx.xxx.license.common.service.** {*;}
+-keepclassmembers interface com.xxx.xxx.xxx.license.common.service.* {
+    public protected private <fields>;
+}
+-keepclassmembers interface com.xxx.xxx.xxx.license.common.service.* {
+	public protected private <methods>;
+}
+-keepclassmembers public interface com.xxx.xxx.xxx.license.common.service.* {
+    public protected private <fields>;
+}
+-keepclassmembers public interface com.xxx.xxx.xxx.license.common.service.* {
+	public protected private <methods>;
+}
+
+#注解
+-keep @interface com.xxx.xxx.xxx.license.common.service.** {*;}
+-keep public @interface com.xxx.xxx.xxx.license.common.service.** {*;}
+-keepclassmembers @interface com.xxx.xxx.xxx.license.common.service.* {
+    public protected private <fields>;
+}
+-keepclassmembers public @interface com.xxx.xxx.xxx.license.common.service.* {
+    public protected private <fields>;
+}
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------
+#modules.le
+#-keep enum com.xxx.xxx.xxx.license.modules.le.** {*;}
+#-keep class com.xxx.xxx.xxx.license.modules.le.** {*;}
+#-keep public enum com.xxx.xxx.xxx.license.modules.le.** {*;}
+#-keep public class com.xxx.xxx.xxx.license.modules.le.** {*;}
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------
+#-keepnames class * implements java.io.Serializable
+# ---------保护所有实体中的字段名称----------
+-keepclassmembers class * implements java.io.Serializable {
+    public protected private <fields>;
+}
+
+# --------- 保护类中的所有方法名 ------------
+-keepclassmembers class * {
+	public protected private <methods>;
+}
+
+# --------- 保护类中的所有成员 --------------
+#-keep
+#-keepnames
+#-keepclassmembers
+#-keepclasseswithmembers
+~~~
 
 ## maven-eclipse-plugin:
 #### Eclipse 插件
