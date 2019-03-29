@@ -1,8 +1,54 @@
 # Maven 常用插件的使用
 
-~~~
-## properties：
 
+## 常用变量：
+~~~
+
+${basedir} 项目根目录  
+${project.basedir} 当前项目基础路径
+${project.packaging} 打包类型，缺省为jar  
+${project.xxx} 当前pom文件的任意节点的内容  
+${project.parent.basedir}  上一级项目基础路径
+${project.build.directory} 构建目录，缺省为target  
+${project.build.outputDirectory} 构建过程输出目录，缺省为target/classes  
+${project.build.finalName} 产出物名称，缺省为${project.artifactId}-${project.version}  
+${project.build.finalName}：项目打包文件名
+${maven.build.timestamp}： 获取打包时间
+${path.separator}： 系统文件分隔符， linux下是冒号-->":", windows下是分号-->";"，
+设置bootclasspath时分割不同的jar包
+
+java.version Java 运行时环境版本 
+java.vendor Java 运行时环境供应商 
+java.vendor.url Java 供应商的 URL 
+java.home Java 安装目录 
+java.vm.specification.version Java 虚拟机规范版本 
+java.vm.specification.vendor Java 虚拟机规范供应商 
+java.vm.specification.name Java 虚拟机规范名称 
+java.vm.version Java 虚拟机实现版本 
+java.vm.vendor Java 虚拟机实现供应商 
+java.vm.name Java 虚拟机实现名称 
+java.specification.version Java 运行时环境规范版本 
+java.specification.vendor Java 运行时环境规范供应商 
+java.specification.name Java 运行时环境规范名称 
+java.class.version Java 类格式版本号 
+java.class.path Java 类路径 
+java.library.path 加载库时搜索的路径列表 
+java.io.tmpdir 默认的临时文件路径 
+java.compiler 要使用的 JIT 编译器的名称 
+java.ext.dirs 一个或多个扩展目录的路径 
+os.name 操作系统的名称 
+os.arch 操作系统的架构 
+os.version 操作系统的版本 
+file.separator 文件分隔符（在 UNIX 系统中是“/”） 
+path.separator 路径分隔符（在 UNIX 系统中是“:”） 
+line.separator 行分隔符（在 UNIX 系统中是“/n”） 
+user.name 用户的账户名称 
+user.home 用户的主目录 
+user.dir 用户的当前工作目录 
+~~~
+
+## properties：
+~~~
 <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -10,9 +56,9 @@
  </properties>
 ~~~
 
-~~~
 ## maven-compiler-plugin：
 #### 编译Java源码，一般只需设置编译的jdk版本
+~~~
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-compiler-plugin</artifactId>
@@ -24,9 +70,9 @@
 </plugin>
 ~~~
 
-~~~
 ## maven-install-plugin 生成Jar到库：
 #### 生成Jar到库
+~~~
 <plugin>
 	<groupId>org.apache.maven.plugins</groupId>
 	<artifactId>maven-install-plugin</artifactId>
@@ -50,9 +96,9 @@
 </plugin>
 ~~~
 
-~~~
 ## maven-war-plugin：
 ####  生成War：
+~~~
 <plugin>
 	<groupId>org.apache.maven.plugins</groupId>
 	<artifactId>maven-war-plugin</artifactId>
@@ -74,9 +120,9 @@
 </plugin>
 ~~~
 
-~~~
 ## maven-deploy-plugin ：
 #### 发布Jar
+~~~
 <plugin>
 	<groupId>org.apache.maven.plugins</groupId>
 	<artifactId>maven-deploy-plugin</artifactId>
@@ -100,9 +146,10 @@
 </plugin>
 ~~~
 
-~~~
+
 ## maven-dependency-plugin:
 #### 用于复制依赖的jar包到指定的文件夹里
+~~~
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-dependency-plugin</artifactId>
@@ -122,9 +169,10 @@
 </plugin>
 ~~~
 
-~~~
+
 ## maven-jar-plugin：
 #### 打成jar时，设定manifest的参数，比如指定运行的Main class，还有依赖的jar包，加入classpath中
+~~~
 <plugin>
 	<groupId>org.apache.maven.plugins</groupId>
 	<artifactId>maven-jar-plugin</artifactId>
@@ -175,9 +223,9 @@
 </plugin>
 ~~~
 
-~~~
 ## maven-antrun-plugin:
 #### 在maven中运行Ant任务，比如在打包阶段，对文件进行复制
+~~~
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-antrun-plugin</artifactId>
@@ -203,9 +251,9 @@
 </plugin>
 ~~~
 
-~~~
 ## wagon-maven-plugin:
 #### 用于一键部署，把本地打包的jar文件，上传到远程服务器上，并执行服务器上的shell命令
+~~~
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>wagon-maven-plugin</artifactId>
@@ -224,9 +272,9 @@
 </plugin>
 ~~~
 
-~~~
 ## tomcat7-maven-plugin:
 #### 用于远程部署Java Web项目
+~~~
 <plugin>
     <groupId>org.apache.tomcat.maven</groupId>
     <artifactId>tomcat7-maven-plugin</artifactId>
@@ -239,9 +287,9 @@
 </plugin>
 ~~~
 
-~~~
 ## cobertura-maven-plugin:
 #### 测试覆盖率插件
+~~~
 <plugin>
 	<groupId>org.codehaus.mojo</groupId>
 	<artifactId>cobertura-maven-plugin</artifactId>
@@ -255,10 +303,11 @@
 </plugin>
 ~~~
 
-~~~
 ## maven-shade-plugin:
-####用于把多个jar包，打成1个jar包
-####一般Java项目都会依赖其他第三方jar包，最终打包时，希望把其他jar包包含在一个jar包里
+#### 用于把多个jar包，打成1个jar包
+#### 一般Java项目都会依赖其他第三方jar包，最终打包时，希望把其他jar包包含在一个jar包里
+
+~~~
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-shade-plugin</artifactId>
@@ -286,8 +335,8 @@
 </plugin>
 ~~~
 
-~~~
 ## maven-resources-plugin：
+~~~
 <plugin>
 	<artifactId>maven-resources-plugin</artifactId>
 	<version>2.6</version>
@@ -329,8 +378,8 @@
 </plugin>
 ~~~
 
-~~~
 ## build-helper-maven-plugin：
+~~~
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>build-helper-maven-plugin</artifactId>
@@ -357,8 +406,8 @@
 </plugin> 
 ~~~
 
-~~~
 ## maven-surefire-plugin：
+~~~
 <plugin>
 	<artifactId>maven-surefire-plugin</artifactId>
 	<version>2.9</version>
@@ -379,10 +428,10 @@
 </plugin>
 ~~~
 
-~~~
 ## maven-assembly-plugin： 
 #### maven自定义(修改)编译后输出的war或jar文件名
 #### 支持定制化打包方式，负责将整个项目按照自定义的目录结构打成最终的压缩包，方便实际部署、可在此处设置打包拷贝路径，配置，以及打包好的jar文件等
+~~~
 <plugin>  
     <groupId>org.apache.maven.plugins</groupId>  
     <artifactId>maven-assembly-plugin</artifactId>  
@@ -412,9 +461,8 @@
 	</execution>  
     </executions>  
 </plugin>  
-~~~
 
-~~~
+
 #### assembly.xml:
 <?xml version="1.0" encoding="UTF-8"?>
 <assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -489,9 +537,10 @@ else
 fi
 ~~~
 
-~~~
 ## maven-dependency-plugin:
-####用来拷贝项目所有依赖的插件
+#### 用来拷贝项目所有依赖的插件
+
+~~~
 <plugin> 
 	<groupId>org.apache.maven.plugins</groupId> 
 	<artifactId>maven-dependency-plugin</artifactId> 
