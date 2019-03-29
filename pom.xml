@@ -16,8 +16,6 @@
     <properties>
 		<pro.version>5.0.0-SNAPSHOT</pro.version>
 		<artifactId.finalName>m-plugin</artifactId.finalName>
-        <!-- main version setting -->
-        <!--<spring.version>4.1.9.RELEASE</spring.version>-->
         <spring.version>4.2.5.RELEASE</spring.version>
         <validator.version>5.2.4.Final</validator.version>
         <mybatis.version>3.2.8</mybatis.version>
@@ -234,20 +232,6 @@
             <version>${mysql.driver.version}</version>
             <scope>runtime</scope>
         </dependency>
-        <!--<dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>ojdbc14</artifactId>
-            <version>${oracle.driver.version}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/ojdbc14-10.2.0.4.0.jar</systemPath>
-        </dependency>-->
-        <!--<dependency>
-            <groupId>net.sourceforge.jtds</groupId>
-            <artifactId>jtds</artifactId>
-            <version>${mssql.driver.version}</version>
-            <scope>runtime</scope>
-        </dependency>-->
-        <!-- PERSISTENCE end -->
 
         <!-- WEB begin -->
         <dependency>
@@ -751,18 +735,6 @@
             <artifactId>ehcache-jgroupsreplication</artifactId>
             <version>1.7</version>
         </dependency>
-        <dependency>
-            <groupId>taobao</groupId>
-            <artifactId>sdk</artifactId>
-            <version>20160607</version>
-        </dependency>
-
-        <dependency>
-            <groupId>taobao</groupId>
-            <artifactId>sdk</artifactId>
-            <version>20160607-source</version>
-            <classifier>source</classifier>
-        </dependency>
 
         <!-- 自定义jar依赖包
         <dependency>
@@ -879,13 +851,6 @@
             <version>1.3</version>
         </dependency>
         <!-- svg 生成png格式图片结束 -->
-
-        <!-- 上传文件的支持 -->
-        <dependency>
-            <groupId>org.oseasy</groupId>
-            <artifactId>ueditor</artifactId>
-            <version>1.1.2</version>
-        </dependency>
         <!--<dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
